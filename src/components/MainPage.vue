@@ -8,8 +8,14 @@
       <button id="SearchBtn" v-on:click="onClickSearch()">Search</button>
     </div>
 
+    <div id="plrNm">{{ playerName }}</div>
+<!--  <div id="plrUid">{{ playerUid }}</div>  -->
+
+    <div id="coin">Coins: {{ bedwarsStats.coins }}</div>
+
     <div class="info">
-      <div id="coin">Coins: {{ bedwarsCoin }}</div>
+      <div id="kills">Kills: {{ bedwarsStats.kills }}</div>
+      <div id="deaths">Deaths: {{ bedwarsStats.deaths }}</div>
     </div>
 
   </div>
@@ -26,29 +32,40 @@
 
   export default {
     name: 'MainPage',
-    data() {
+    data: function() {
       return {
         playerName: '',
-        bedwarsCoin: 0
+        playerUid: '',
+        bedwarsStats: {
+          coins: 0,
+          kills: 0,
+          deaths: 0
+        }
       }
+
     },
     methods: {
       onClickSearch: function () {
+        // playerData = []
 
         client.getPlayerByUsername(this.playerName, (err, player) => {
-          playerData = player.stats.Bedwars
+          playerData = player
+          // this.playerUid = player.uuid
+          this.bedwarsStats.coins = player.stats.Bedwars.coins
+          this.bedwarsStats.kills = player.stats.Bedwars.kills_bedwars
+          this.bedwarsStats.deaths = player.stats.Bedwars.deaths_bedwars
           if (err) {
             return console.info('Nope!')
           }
         })
 
-        this.bedwarsCoin = playerData.coins
+        // this.bedwarsCoin = playerData.coins
 
         console.log(playerData)
-        console.log('bedwarsCoins: ' + this.bedwarsCoin)
+        console.log('bedwarsCoins: ' + this.bedwarsStats.coins)
         console.log('player Name: ' + this.playerName)
-
-
+        console.log('kills: ', this.bedwarsStats.kills)
+        console.log('deaths: ', this.bedwarsStats.deaths)
       }
     }
   }
@@ -113,5 +130,22 @@
     #coin {
       color: #c2c2d0;
       margin: 20px;
+      font-size: 30px;
+    }
+
+    #plrNm {
+      color: #f0f8ff;
+      font-weight: bold;
+    }
+
+    #kills {
+      color: #f0f8ff;
+      font-size: 30px;
+      margin: 10px;
+    }
+    #deaths {
+      color: #f0f8ff;
+      font-size: 30px;
+      margin: 10px;
     }
 </style>
